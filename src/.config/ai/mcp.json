@@ -1,0 +1,40 @@
+{
+  "mcpServers": {
+    "gh_grep": {
+      "type": "http",
+      "url": "https://mcp.grep.app"
+    },
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
+      }
+    },
+    "atlassian": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["mcp-atlassian"],
+      "env": {
+        "JIRA_URL": "${JIRA_URL}",
+        "JIRA_PERSONAL_TOKEN": "${JIRA_PERSONAL_TOKEN}",
+        "CONFLUENCE_URL": "${CONFLUENCE_URL}",
+        "CONFLUENCE_PERSONAL_TOKEN": "${CONFLUENCE_PERSONAL_TOKEN}",
+        "JIRA_SSL_VERIFY": "false",
+        "CONFLUENCE_SSL_VERIFY": "false"
+      }
+    },
+    "bitbucket": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@nexus2520/bitbucket-mcp-server"],
+      "env": {
+        "BITBUCKET_BASE_URL": "${BITBUCKET_BASE_URL}",
+        "BITBUCKET_USERNAME": "${BITBUCKET_USERNAME}",
+        "BITBUCKET_TOKEN": "${BITBUCKET_TOKEN}",
+        "NODE_TLS_REJECT_UNAUTHORIZED": "${NODE_TLS_REJECT_UNAUTHORIZED:-0}",
+        "BITBUCKET_READ_ONLY": "true"
+      }
+    }
+  }
+}

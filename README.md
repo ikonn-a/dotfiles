@@ -30,9 +30,16 @@ make doctor      # проверить окружение
 | `src/.config/git/work.gitconfig.example` | копия в `work.gitconfig` | рабочая identity, не коммитится |
 | `src/.config/git/personal.gitconfig.example` | копия в `personal.gitconfig` | личная identity для `~/projects/`, не коммитится |
 | `src/.config/secrets.d/env.example` | копия в `secrets.env` | ключи и URL, не коммитится |
+| `src/.config/ai/mcp.json` | `~/.config/ai/mcp.json` | канон MCP-серверов (см. `make ai-sync`) |
+| `src/.claude/skills/<name>/SKILL.md` | `~/.claude/skills/<name>/SKILL.md` | skills для Claude Code, OpenCode, VS Code |
 
 Ключи и адреса сервисов — только в `~/.config/secrets.d/secrets.env`.
 Соглашение об именах описано в [`docs/ai-providers.md`](docs/ai-providers.md).
+
+MCP-серверы описаны один раз в `src/.config/ai/mcp.json`, а `make ai-sync`
+раскладывает их по конфигам Claude Code (включая профили CCR) и OpenCode.
+Skills лежат в `src/.claude/skills/` и читаются всеми тремя агентами без
+конвертации.
 
 ### git identity
 
@@ -65,10 +72,12 @@ make bin         скачать недостающие CLI в ~/.local/bin (бе
 make node        поставить Node.js LTS в ~/.local (без sudo)
 make npmrc       настроить npm: глобальные пакеты в ~/.local
 make secrets     создать secrets.env и git-identity: local, work, personal
+make ai-sync     разложить MCP из src/.config/ai/mcp.json по клиентам
+make ai-sync-dry показать diff, ничего не меняя
 make doctor      проверка окружения
 make check       синтаксис zsh/sh + shellcheck, если есть
-make bootstrap   deps + secrets + install + doctor
-make update      git pull --ff-only && make install
+make bootstrap   deps + secrets + install + doctor (+ ai-sync при наличии ключей)
+make update      git pull --ff-only && make install && make ai-sync
 ```
 
 `make bin PKGS="rg bat"` — только выбранные тулы.
@@ -78,6 +87,7 @@ make update      git pull --ff-only && make install
 
 - [`docs/install.md`](docs/install.md) — установка на macOS и Linux, Python через `uv`, Docker
 - [`docs/ai-providers.md`](docs/ai-providers.md) — где хранить URL и ключи для агентов
+- [`docs/skills.md`](docs/skills.md) — skills для Claude Code, OpenCode и VS Code
 - [`docs/troubleshooting.md`](docs/troubleshooting.md) — частые проблемы
 
 ## Структура
@@ -86,12 +96,16 @@ make update      git pull --ff-only && make install
 install.sh          POSIX-линковка src/ -> $HOME с бэкапом
 unlink.sh           снять свои симлинки
 Makefile            единая точка входа
-scripts/            пакеты, загрузка бинарей, doctor, check
+scripts/            пакеты, загрузка бинарей, doctor, check, ai-sync
 packages/           packages.csv (apt/dnf/macos)
 src/                зеркало $HOME
-backup/             бэкапы от install.sh (в .gitignore)
+src/.config/ai/     канон MCP-серверов
+src/.claude/skills/ skills для Claude Code, OpenCode, VS Code
+backup/             бэкапы от install.sh и ai-sync.sh (в .gitignore)
 ```
 
 Симлинкуются только файлы, каталоги создаются как настоящие.
 `~/.claude*`, `~/.config/opencode`, `~/.claude-code-router` и `~/.docker/config.json`
 намеренно не включены: их перезаписывают соответствующие приложения.
+Исключение — `~/.config/ai/mcp.json`: он линкуется из репозитория, но в нём
+только ссылки на переменные, без секретов.

@@ -155,10 +155,37 @@ else
   dim "  --  docker отсутствует (ставится Docker Desktop, не пакетным менеджером)"
 fi
 
+head_ "MCP"
+if [ -f "$HOME/.config/ai/mcp.json" ] || [ -L "$HOME/.config/ai/mcp.json" ]; then
+  pass "канон ~/.config/ai/mcp.json"
+  count=$(jq '.mcpServers | length' "$HOME/.config/ai/mcp.json" 2>/dev/null || echo "?")
+  log "  серверов в каноне: $count"
+else
+  warn "нет ~/.config/ai/mcp.json (make install + make ai-sync)"
+fi
+for f in "$HOME/.claude/.claude.json" "$HOME/.claude.json"; do
+  if [ -f "$f" ]; then
+    n=$(jq '.mcpServers | length' "$f" 2>/dev/null || echo "?")
+    pass "$(printf '~/%s' "${f#"$HOME"/}"): $n серверов"
+  else
+    dim "  --  ~/${f#"$HOME"/} нет (make ai-sync)"
+  fi
+done
+OC=${OPENCODE_CONFIG_FILE:-$HOME/.config/opencode/opencode.jsonc}
+if [ -f "$OC" ]; then
+  if grep -q 'MCP-BEGIN' "$OC"; then
+    pass "~/${OC#"$HOME"/}: блок MCP сгенерирован"
+  else
+    warn "~/${OC#"$HOME"/}: нет блока MCP-BEGIN (make ai-sync)"
+  fi
+else
+  dim "  --  ~/${OC#"$HOME"/} нет"
+fi
+
 head_ "прочее"
 if [ -f "$HOME/.config/secrets.d/secrets.env" ]; then
   pass "secrets.env есть"
-  perms=$(ls -l "$HOME/.config/secrets.d/secrets.env" | awk '{print $1}')
+  perms=$(ls -l "$HOME/.config/secrets.d/secrets.env" | awk '{print $1}' | tr -d '@+')
   case $perms in
     -rw-------) pass "права 600" ;;
     *) warn "права $perms (ожидалось 600: chmod 600 ~/.config/secrets.d/secrets.env)" ;;

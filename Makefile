@@ -10,7 +10,7 @@ export REPO_ROOT
 PKGS ?=
 NODE_VERSION ?=
 
-.PHONY: help install dry-run uninstall deps bin node npmrc secrets doctor check bootstrap update repo
+.PHONY: help install dry-run uninstall deps bin node npmrc secrets ai-sync ai-sync-dry doctor check bootstrap update repo
 
 help: ## Список целей
 	@printf '\n dotfiles: %s\n\n' "$(REPO_ROOT)"
@@ -66,6 +66,12 @@ secrets: ## Создать local/work/personal.gitconfig и secrets.env из ш�
 	@printf '    %s  — рабочая identity (по умолчанию)\n' "$$HOME/.config/git/work.gitconfig"
 	@printf '    %s — личная identity для ~/projects/\n' "$$HOME/.config/git/personal.gitconfig"
 
+ai-sync: ## Разложить MCP из src/.config/ai/mcp.json по конфигам клиентов
+	@sh "$(REPO_ROOT)/scripts/ai-sync.sh"
+
+ai-sync-dry: ## Показать, что изменит ai-sync
+	@sh "$(REPO_ROOT)/scripts/ai-sync.sh" --dry-run
+
 doctor: ## Проверить окружение
 	@sh "$(REPO_ROOT)/scripts/doctor.sh"
 
@@ -73,10 +79,14 @@ check: ## Проверить синтаксис конфигов и скрипт
 	@sh "$(REPO_ROOT)/scripts/check.sh"
 
 bootstrap: deps secrets install doctor ## Новая машина: deps + secrets + install + doctor
+	@sh "$(REPO_ROOT)/scripts/ai-sync.sh" \
+		|| printf '  ai-sync пропущен: заполните ~/.config/secrets.d/secrets.env\n'
 
-update: ## git pull --ff-only && make install
+update: ## git pull --ff-only && make install && make ai-sync
 	@git -C "$(REPO_ROOT)" pull --ff-only
 	@sh "$(REPO_ROOT)/install.sh"
+	@sh "$(REPO_ROOT)/scripts/ai-sync.sh" \
+		|| printf '  ai-sync пропущен: заполните ~/.config/secrets.d/secrets.env\n'
 
 repo: ## git init -b main + добавить origin
 	@cd "$(REPO_ROOT)" && { [ -d .git ] || git init -b main; }

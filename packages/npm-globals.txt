@@ -1,5 +1,4 @@
 # CLI, которые дополнительно удобно держать установленными (справочно, не ставится автоматически)
 @anthropic-ai/claude-code
 @musistudio/claude-code-router
-
-# opencode ставится отдельным установщиком, не через npm
+@opencode/cli

@@ -114,6 +114,8 @@ backed=0
 while IFS= read -r f; do
   rel=${f#"$SRC"}
   [ -n "$rel" ] || continue
+  # .gitkeep держит пустые каталоги в git, в $HOME он не нужен
+  case $rel in */.gitkeep|.gitkeep) continue ;; esac
   target=$HOME$rel
   parent=$(dirname "$target")
   [ "$DRY" -eq 1 ] || mkdir -p "$parent"
