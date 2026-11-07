@@ -18,6 +18,12 @@ make bootstrap
 (рабочая identity) и `~/.config/git/personal.gitconfig` (личная для `~/projects/`),
 откройте новый терминал.
 
+VS Code ставится отдельно — он не входит в `bootstrap` (скачивание ~340 МБ):
+
+```sh
+make vscode
+```
+
 ## Пошагово
 
 | Команда | Что делает |
@@ -30,6 +36,7 @@ make bootstrap
 | `make node` | ставит Node.js LTS в `~/.local/share/nodejs` (без sudo) |
 | `make npmrc` | настраивает npm: глобальные пакеты в `~/.local` |
 | `make secrets` | создаёт `secrets.env` (chmod 600) и `local/work/personal.gitconfig` |
+| `make vscode` | ставит VS Code, линкует `settings.json`, ставит расширения |
 | `make doctor` | проверяет окружение |
 | `make check` | `zsh -n`, `sh -n`, shellcheck, Makefile, gitconfig |
 | `make update` | `git pull --ff-only` + `install` |
@@ -252,6 +259,7 @@ docker context use desktop-linux    # macOS
 | `~/.claude-code-router/config.sqlite` | живая БД; копирование на работающей системе запрещено |
 | `~/.config/opencode/opencode.jsonc` | содержит ключи провайдеров |
 | `~/.docker/config.json` | пишется Docker Desktop |
+| `~/Library/Application Support/Code/User/{argv.json,globalStorage,History,workspaceStorage}` | машинное состояние VS Code, см. [`vscode.md`](vscode.md) |
 
 Ключи для этих инструментов берите из `~/.config/secrets.d/secrets.env` —
 см. [`ai-providers.md`](ai-providers.md).

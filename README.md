@@ -31,6 +31,8 @@ make doctor      # проверить окружение
 | `src/.config/git/personal.gitconfig.example` | копия в `personal.gitconfig` | личная identity для `~/projects/`, не коммитится |
 | `src/.config/secrets.d/env.example` | копия в `secrets.env` | ключи и URL, не коммитится |
 | `src/.config/ai/mcp.json` | `~/.config/ai/mcp.json` | канон MCP-серверов (см. `make ai-sync`) |
+| `src/.config/vscode/User/settings.json` | `~/Library/Application Support/Code/User/settings.json` (macOS) | настройки VS Code, ставится `make vscode` |
+| `src/.config/vscode/extensions.txt` | — | список расширений для `make vscode-ext` |
 | `src/.claude/skills/<name>/SKILL.md` | `~/.claude/skills/<name>/SKILL.md` | skills для Claude Code, OpenCode, VS Code |
 
 Ключи и адреса сервисов — только в `~/.config/secrets.d/secrets.env`.
@@ -74,6 +76,8 @@ make npmrc       настроить npm: глобальные пакеты в ~/
 make secrets     создать secrets.env и git-identity: local, work, personal
 make ai-sync     разложить MCP из src/.config/ai/mcp.json по клиентам
 make ai-sync-dry показать diff, ничего не меняя
+make vscode      поставить VS Code + настройки + расширения
+make vscode-pull забрать правки settings.json из VS Code в репозиторий
 make doctor      проверка окружения
 make check       синтаксис zsh/sh + shellcheck, если есть
 make bootstrap   deps + secrets + install + doctor (+ ai-sync при наличии ключей)
@@ -82,10 +86,12 @@ make update      git pull --ff-only && make install && make ai-sync
 
 `make bin PKGS="rg bat"` — только выбранные тулы.
 `make node NODE_VERSION=24.22.2` — конкретная версия Node.
+`make vscode FORCE=1` — переустановить/обновить VS Code.
 
 ## Документация
 
 - [`docs/install.md`](docs/install.md) — установка на macOS и Linux, Python через `uv`, Docker
+- [`docs/vscode.md`](docs/vscode.md) — VS Code: установка, settings.json, расширения
 - [`docs/ai-providers.md`](docs/ai-providers.md) — где хранить URL и ключи для агентов
 - [`docs/skills.md`](docs/skills.md) — skills для Claude Code, OpenCode и VS Code
 - [`docs/troubleshooting.md`](docs/troubleshooting.md) — частые проблемы
@@ -96,10 +102,11 @@ make update      git pull --ff-only && make install && make ai-sync
 install.sh          POSIX-линковка src/ -> $HOME с бэкапом
 unlink.sh           снять свои симлинки
 Makefile            единая точка входа
-scripts/            пакеты, загрузка бинарей, doctor, check, ai-sync
+scripts/            пакеты, загрузка бинарей, doctor, check, ai-sync, vscode
 packages/           packages.csv (apt/dnf/macos)
 src/                зеркало $HOME
 src/.config/ai/     канон MCP-серверов
+src/.config/vscode/ настройки и список расширений VS Code
 src/.claude/skills/ skills для Claude Code, OpenCode, VS Code
 backup/             бэкапы от install.sh и ai-sync.sh (в .gitignore)
 ```

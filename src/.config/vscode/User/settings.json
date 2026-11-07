@@ -1,0 +1,15 @@
+{
+    "chat.agentFilesLocations": {
+        "~/.claude/agents": true
+    },
+    "files.autoSave": "afterDelay",
+    "workbench.colorTheme": "Light 2026",
+    "workbench.settings.applyToAllProfiles": [
+        "github.copilot.selectedCompletionModel"
+    ],
+    "http.systemCertificates": true,
+    "terminal.integrated.mouseWheelScrollSensitivity": 3,
+    "terminal.integrated.gpuAcceleration": "off",
+    "telemetry.telemetryLevel": "off",
+    "workbench.startupEditor": "none"
+}

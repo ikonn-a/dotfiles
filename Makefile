@@ -9,13 +9,14 @@ export REPO_ROOT
 
 PKGS ?=
 NODE_VERSION ?=
+FORCE ?=
 
-.PHONY: help install dry-run uninstall deps bin node npmrc secrets ai-sync ai-sync-dry doctor check bootstrap update repo
+.PHONY: help install dry-run uninstall deps bin node npmrc secrets ai-sync ai-sync-dry vscode vscode-settings vscode-pull vscode-ext vscode-ext-pull doctor check bootstrap update repo
 
 help: ## Список целей
 	@printf '\n dotfiles: %s\n\n' "$(REPO_ROOT)"
-	@awk 'BEGIN { FS = ":.*## " } /^[a-zA-Z_-]+:.*## / { printf "  \033[1m%-12s\033[0m %s\n", $$1, $$2 }' "$(REPO_ROOT)/Makefile"
-	@printf '\n  Переменные: PKGS="rg bat" make bin\n              NODE_VERSION=24.22.2 make node\n\n'
+	@awk 'BEGIN { FS = ":.*## " } /^[a-zA-Z_-]+:.*## / { printf "  \033[1m%-16s\033[0m %s\n", $$1, $$2 }' "$(REPO_ROOT)/Makefile"
+	@printf '\n  Переменные: PKGS="rg bat" make bin\n              NODE_VERSION=24.22.2 make node\n              FORCE=1 make vscode\n\n'
 
 install: ## Симлинки src/ -> $$HOME (старое в backup/)
 	@sh "$(REPO_ROOT)/install.sh"
@@ -71,6 +72,25 @@ ai-sync: ## Разложить MCP из src/.config/ai/mcp.json по конфи�
 
 ai-sync-dry: ## Показать, что изменит ai-sync
 	@sh "$(REPO_ROOT)/scripts/ai-sync.sh" --dry-run
+
+vscode: ## VS Code: установить, настройки, расширения (FORCE=1 для переустановки)
+	@sh "$(REPO_ROOT)/scripts/vscode.sh" install $(if $(FORCE),--force,) \
+		|| printf '\n  VS Code не установился; настройки всё равно залинкую\n'
+	@sh "$(REPO_ROOT)/scripts/vscode.sh" settings
+	@sh "$(REPO_ROOT)/scripts/vscode.sh" ext \
+		|| printf '\n  расширения не поставлены (нужна рабочая команда code)\n'
+
+vscode-settings: ## Залинковать settings.json в профиль VS Code
+	@sh "$(REPO_ROOT)/scripts/vscode.sh" settings
+
+vscode-pull: ## Забрать правки settings.json из VS Code в репозиторий
+	@sh "$(REPO_ROOT)/scripts/vscode.sh" pull
+
+vscode-ext: ## Поставить расширения из src/.config/vscode/extensions.txt
+	@sh "$(REPO_ROOT)/scripts/vscode.sh" ext
+
+vscode-ext-pull: ## Обновить extensions.txt по установленным расширениям
+	@sh "$(REPO_ROOT)/scripts/vscode.sh" ext-pull
 
 doctor: ## Проверить окружение
 	@sh "$(REPO_ROOT)/scripts/doctor.sh"

@@ -61,6 +61,45 @@ else
   fails=$((fails + 1))
 fi
 
+head_ "vscode"
+vsc=$REPO_ROOT/src/.config/vscode
+if [ -f "$vsc/User/settings.json" ]; then
+  if have jq; then
+    if jq -e . "$vsc/User/settings.json" >/dev/null 2>&1; then
+      ok "settings.json (валидный JSON, без комментариев)"
+    else
+      err "settings.json — не JSON (комментарии в управляемом файле недопустимы)"
+      jq -e . "$vsc/User/settings.json" 2>&1 | sed -n '1,3p' | sed 's/^/    /'
+      fails=$((fails + 1))
+    fi
+  else
+    dim "  --  jq не установлен, settings.json не проверен"
+  fi
+else
+  err "нет $vsc/User/settings.json"
+  fails=$((fails + 1))
+fi
+if [ -f "$vsc/extensions.txt" ]; then
+  bad=$(sed 's/#.*//' "$vsc/extensions.txt" | tr -d ' \t\r' | grep -v '^$' \
+        | grep -vE '^[A-Za-z0-9][A-Za-z0-9_-]*\.[A-Za-z0-9][A-Za-z0-9_.-]*$' || true)
+  if [ -z "$bad" ]; then
+    ok "extensions.txt ($(sed 's/#.*//' "$vsc/extensions.txt" | tr -d ' \t\r' | grep -c .) шт.)"
+  else
+    err "extensions.txt: странные строки:"
+    printf '%s\n' "$bad" | sed 's/^/    /'
+    fails=$((fails + 1))
+  fi
+else
+  err "нет $vsc/extensions.txt"
+  fails=$((fails + 1))
+fi
+if make -n -C "$REPO_ROOT" vscode-settings >/dev/null 2>&1; then
+  ok "make vscode-settings"
+else
+  err "цель vscode-settings сломана"
+  fails=$((fails + 1))
+fi
+
 printf '\n'
 if [ "$fails" -eq 0 ]; then ok "проверка пройдена"; else err "ошибок: $fails"; fi
 printf '\n'

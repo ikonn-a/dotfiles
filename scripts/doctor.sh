@@ -182,6 +182,38 @@ else
   dim "  --  ~/${OC#"$HOME"/} нет"
 fi
 
+head_ "VS Code"
+if have code; then
+  pass "code $(code --version 2>/dev/null | head -1) -> $(command -v code)"
+  if [ "$OS" = darwin ]; then
+    vsc_user="$HOME/Library/Application Support/Code/User"
+  else
+    vsc_user="${XDG_CONFIG_HOME:-$HOME/.config}/Code/User"
+  fi
+  live=$vsc_user/settings.json
+  want=$SRC/.config/vscode/User/settings.json
+  if [ -L "$live" ] && [ "$(readlink "$live")" = "$want" ]; then
+    pass "settings.json -> репозиторий"
+  elif [ -L "$live" ]; then
+    warn "settings.json ведёт в $(readlink "$live") (make vscode-settings)"
+  elif [ -f "$live" ]; then
+    warn "settings.json не симлинк (правки живут отдельно; make vscode-pull, затем make vscode-settings)"
+  else
+    warn "нет ~/${live#"$HOME"/} (make vscode)"
+  fi
+  if [ -f "$SRC/.config/vscode/extensions.txt" ]; then
+    want_n=$(sed 's/#.*//' "$SRC/.config/vscode/extensions.txt" | tr -d ' \t\r' | grep -c . || true)
+    have_n=$(code --list-extensions 2>/dev/null | wc -l | tr -d ' ')
+    if [ "$want_n" -eq "$have_n" ]; then
+      pass "расширений $have_n (как в extensions.txt)"
+    else
+      warn "расширений $have_n, в extensions.txt $want_n (make vscode-ext)"
+    fi
+  fi
+else
+  warn "code не найден (make vscode)"
+fi
+
 head_ "прочее"
 if [ -f "$HOME/.config/secrets.d/secrets.env" ]; then
   pass "secrets.env есть"
