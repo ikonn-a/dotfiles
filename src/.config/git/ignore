@@ -1,0 +1,6 @@
+# Отключение шума в .gitignore для всех репозиториев
+.DS_Store
+*.swp
+*~
+.idea/
+.vscode/

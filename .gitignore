@@ -1,0 +1,16 @@
+# Backups created by install.sh / unlink.sh
+backup/
+
+# Real secrets and machine-local overrides (never committed)
+*.env
+!env.example
+local.zsh
+local.gitconfig
+work.gitconfig
+personal.gitconfig
+*.local
+
+# Editor / OS noise
+.DS_Store
+*.swp
+*~

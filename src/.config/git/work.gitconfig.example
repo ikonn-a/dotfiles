@@ -1,0 +1,9 @@
+# Шаблон. Копируется в ~/.config/git/work.gitconfig командой `make secrets`.
+# Этот файл не коммитится.
+#
+# Рабочая identity. Используется по умолчанию и для каталога ~/work/,
+# а также для рабочих remote (см. local.gitconfig.example).
+
+[user]
+	name = Ваше Имя
+	email = you@company.example

@@ -1,0 +1,28 @@
+name,apt,dnf,macos,description
+git,git,git,system,Git
+make,make,make,system,GNU Make
+curl,curl,curl,system,HTTP client
+jq,jq,jq,system,JSON processor
+zsh,zsh,zsh,system,Z shell
+shellcheck,shellcheck,ShellCheck,skip,Static analysis for shell scripts
+ripgrep,ripgrep,ripgrep,bin,Fast recursive grep
+fd-find,fd-find,fd-find,bin,Fast find (binary may be fdfind)
+bat,bat,bat,bin,Cat with syntax highlighting (binary may be batcat)
+fzf,fzf,fzf,bin,Fuzzy finder
+eza,eza,eza,bin,Modern ls replacement
+git-delta,git-delta,git-delta,bin,Syntax-highlighting pager for git
+starship,starship,starship,bin,Cross-shell prompt
+zoxide,zoxide,zoxide,bin,Smarter cd
+direnv,direnv,direnv,bin,Per-directory environment loader
+yq,yq,yq,bin,YAML processor
+gh,gh,gh,bin,GitHub CLI
+tmux,tmux,tmux,skip,Terminal multiplexer (на macOS собирать из исходников)
+htop,htop,htop,skip,Interactive process viewer
+tealdeer,tealdeer,tealdeer,bin,tldr client
+tree,tree,tree,skip,Directory tree viewer
+unzip,unzip,unzip,system,Archive extraction
+uv,,,bin,Python package and interpreter manager
+nodejs,,,bin,Node.js LTS (make node; бинарники в ~/.local)
+qsv,,,bin,Fast CSV toolkit (qsvlite; в apt/dnf отсутствует)
+neovim,neovim,neovim,bin,Neovim editor (make bin ставит свежий релиз деревом)
+feh,feh,feh,skip,Image viewer for X11 (только Linux; порта для macOS нет)

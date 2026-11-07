@@ -1,0 +1,10 @@
+# Шаблон. Копируется в ~/.config/git/personal.gitconfig командой `make secrets`.
+# Этот файл не коммитится.
+#
+# Личная identity для каталога ~/projects/ (GitHub).
+# noreply-адрес вида <id>+<login>@users.noreply.github.com не раскрывает
+# настоящую почту и корректно связывает коммиты с аккаунтом GitHub.
+
+[user]
+	name = Ваше Имя
+	email = you@users.noreply.github.com

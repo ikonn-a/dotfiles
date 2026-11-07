@@ -1,0 +1,52 @@
+[init]
+	defaultBranch = main
+
+[pull]
+	rebase = true
+
+[push]
+	default = current
+	autoSetupRemote = true
+
+[fetch]
+	prune = true
+
+[rebase]
+	autoStash = true
+
+[core]
+	editor = vi
+	autocrlf = input
+	excludesFile = ~/.config/git/ignore
+
+[diff]
+	colorMoved = default
+
+[merge]
+	conflictStyle = zdiff3
+
+[rerere]
+	enabled = true
+
+[github]
+	# user задаётся в локальном файле
+	protocol = https
+
+# Порядок include важен: каждое следующее правило переопределяет предыдущее.
+#
+# 1. Identity по умолчанию для машины (рабочая).
+[include]
+	path = ~/.config/git/work.gitconfig
+
+# 2. Личный каталог проектов — GitHub-identity.
+[includeIf "gitdir:~/projects/"]
+	path = ~/.config/git/personal.gitconfig
+
+# 3. Явный рабочий каталог — рабочая identity.
+[includeIf "gitdir:~/work/"]
+	path = ~/.config/git/work.gitconfig
+
+# 4. Машинные настройки — последними, чтобы иметь право переопределить правила выше.
+#    Здесь же исключения по remote (например, рабочий клон, лежащий в ~/projects).
+[include]
+	path = ~/.config/git/local.gitconfig

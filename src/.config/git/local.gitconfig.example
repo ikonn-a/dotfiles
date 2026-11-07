@@ -1,0 +1,12 @@
+# Шаблон. Копируется в ~/.config/git/local.gitconfig командой `make secrets`.
+# Этот файл не коммитится.
+#
+# Машинные git-настройки, которые не должны попадать в репозиторий.
+# Подключается последним, поэтому может переопределить любые правила
+# из ~/.gitconfig (в том числе identity для каталогов).
+
+# Пример: рабочий клон лежит в ~/projects/ (где по умолчанию identity личная).
+# Remote оказывается важнее каталога.
+#
+# [includeIf "hasconfig:remote.*.url:https://git.company.example/**"]
+# 	path = ~/.config/git/work.gitconfig
